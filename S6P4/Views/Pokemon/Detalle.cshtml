@@ -1,0 +1,161 @@
+﻿
+@model S6P4.Models.PokemonDetalleViewModel
+@using System.Linq
+
+@{
+    ViewBag.Title = Model.Pokemon != null
+        ? Model.Pokemon.NombreVisible
+        : "Detalle Pokémon";
+}
+
+<div class="pokemon-detail">
+
+    @if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <div class="alert alert-danger">
+            @Model.Error
+        </div>
+    }
+
+    @if (Model.Pokemon != null)
+    {
+        <div class="text-center">
+            <h1>@Model.Pokemon.NombreVisible</h1>
+            <h3>@Model.Pokemon.NumeroFormateado</h3>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-5 text-center">
+
+                <img src="@Model.Pokemon.ImagenUrl"
+                     alt="@Model.Pokemon.NombreVisible"
+                     class="pokemon-detail-image" />
+
+
+                <h3>Tipos</h3>
+
+                @if (Model.Pokemon.Types != null)
+                {
+                    foreach (var tipo in Model.Pokemon.Types)
+                    {
+                        if (tipo.Type != null)
+                        {
+                            <span class="pokemon-type type-@(tipo.Type.Name)">
+                                @S6P4.Models.PokemonHelper.TipoEs(tipo.Type.Name)
+                            </span>
+                        }
+                    }
+                }
+
+
+                <p>
+                    <strong>Nombre:</strong>
+                    @Model.Pokemon.NombreVisible
+                </p>
+
+                <p>
+                    <strong>Número:</strong>
+                    @Model.Pokemon.NumeroFormateado
+                </p>
+
+                <p>
+                    <strong>Altura:</strong>
+                    @Model.Pokemon.AlturaMetros m
+                </p>
+
+                <p>
+                    <strong>Peso:</strong>
+                    @Model.Pokemon.PesoKg kg
+                </p>
+
+                <p>
+                    <strong>Experiencia base:</strong>
+                    @Model.Pokemon.BaseExperience
+                </p>
+
+                <h3>Descripción</h3>
+
+                <p>
+                    @(string.IsNullOrEmpty(Model.Descripcion)
+                        ? "Descripción no disponible."
+                        : Model.Descripcion)
+                </p>
+
+
+                <h3>Habilidades</h3>
+
+                @if (Model.Pokemon.Abilities != null && Model.Pokemon.Abilities.Any())
+                {
+                    <ul>
+                        @foreach (var habilidad in Model.Pokemon.Abilities)
+                        {
+                            if (habilidad.Ability != null)
+                            {
+                                <li>
+                                    @habilidad.Ability.Name.Replace("-", " ")
+
+                                    @if (habilidad.IsHidden)
+                                    {
+                                        <span>(Habilidad oculta)</span>
+                                    }
+                                </li>
+                            }
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No hay habilidades disponibles.</p>
+                }
+
+
+            </div>
+        </div>
+
+        <hr />
+
+        <h2 class="text-center">
+            Estadísticas del Pokémon
+        </h2>
+
+        if (Model.Pokemon.Stats != null &&
+            Model.Pokemon.Stats.Any())
+        {
+            foreach (var stat in Model.Pokemon.Stats)
+            {
+                if (stat.Stat != null)
+                {
+                    <div class="pokemon-stat">
+
+                        <strong>
+                            @S6P4.Models.PokemonHelper.StatEs(stat.Stat.Name)
+                            : @stat.BaseStat
+                        </strong>
+
+                        <div class="pokemon-stat-bar">
+                            <div class="pokemon-stat-fill"
+                                 style="@("width: " + S6P4.Models.PokemonHelper.PorcentajeStat(stat.BaseStat) + "%;")">
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            }
+        }
+        else
+        {
+            <p>No hay estadísticas disponibles.</p>
+        }
+
+        <div class="text-center" style="margin-top:30px;">
+
+            <a href="@Url.Action("Index", "Pokemon")"
+               class="btn btn-primary">
+                ← Volver a la Pokédex
+            </a>
+
+        </div>
+    }
+
+</div>

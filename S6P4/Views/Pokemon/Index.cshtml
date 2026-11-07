@@ -1,0 +1,98 @@
+﻿
+@model S6P4.Models.PokemonListaViewModel
+
+@{
+    ViewBag.Title = "Pokédex";
+}
+
+<div class="pokedex-header">
+    <h1>⚡ Pokédex</h1>
+    <p>Explora el mundo Pokémon y descubre sus características</p>
+</div>
+
+<form action="@Url.Action("Buscar", "Pokemon")"
+      method="get"
+      class="pokemon-search">
+
+    <input type="text"
+           name="q"
+           placeholder="Buscar Pokémon por nombre o número..."
+           required />
+
+    <button type="submit">Buscar</button>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <div class="alert alert-danger">
+        @Model.Error
+    </div>
+}
+
+@if (Model.Pokemones != null && Model.Pokemones.Any())
+{
+    <div class="pokemon-grid">
+
+        @foreach (var pokemon in Model.Pokemones)
+        {
+            <a href="@Url.Action("Detalle", "Pokemon", new { id = pokemon.Id })"
+               class="pokemon-card">
+
+                <span class="pokemon-number">
+                    #@pokemon.Id.ToString("D3")
+                </span>
+
+                @if (pokemon.Sprites != null)
+                {
+                    <img src="@pokemon.Sprites.FrontDefault"
+                         alt="@pokemon.Name"
+                         loading="lazy" />
+                }
+
+                <h3 class="pokemon-name">
+                    @pokemon.Name
+                </h3>
+
+                @if (pokemon.Types != null)
+                {
+                    foreach (var tipo in pokemon.Types.OrderBy(t => t.Slot))
+                    {
+                        <span class="pokemon-type type-@tipo.Type.Name">
+                            @tipo.Type.Name
+                        </span>
+                    }
+                }
+
+            </a>
+        }
+
+    </div>
+
+    <div class="pokemon-pagination">
+
+        @if (Model.Pagina > 1)
+        {
+            <a href="@Url.Action("Index", "Pokemon", new { pagina = Model.Pagina - 1 })">
+                ← Anterior
+            </a>
+        }
+
+        <span>
+            Página @Model.Pagina de @Model.TotalPaginas
+        </span>
+
+        @if (Model.Pagina < Model.TotalPaginas)
+        {
+            <a href="@Url.Action("Index", "Pokemon", new { pagina = Model.Pagina + 1 })">
+                Siguiente →
+            </a>
+        }
+
+    </div>
+}
+else if (string.IsNullOrEmpty(Model.Error))
+{
+    <div class="alert alert-info text-center">
+        No se encontraron Pokémon.
+    </div>
+}

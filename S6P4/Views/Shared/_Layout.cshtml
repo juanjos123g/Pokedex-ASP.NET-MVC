@@ -1,0 +1,97 @@
+﻿
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewBag.Title - Pokédex</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-sm navbar-dark"
+         style="background-color: #e53935;">
+
+        <div class="container">
+
+            @Html.ActionLink(
+                "⚡ Pokédex",
+                "Index",
+                "Pokemon",
+                new { area = "" },
+                new { @class = "navbar-brand fw-bold" }
+            )
+
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarPokedex"
+                    aria-controls="navbarPokedex"
+                    aria-expanded="false"
+                    aria-label="Alternar navegación">
+
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse"
+                 id="navbarPokedex">
+
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        @Html.ActionLink(
+                            "Inicio",
+                            "Index",
+                            "Pokemon",
+                            null,
+                            new { @class = "nav-link" }
+                        )
+                    </li>
+
+                    <li class="nav-item">
+                        @Html.ActionLink(
+                            "Buscar Pokémon",
+                            "Index",
+                            "Pokemon",
+                            null,
+                            new { @class = "nav-link" }
+                        )
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <main class="container body-content">
+
+        @RenderBody()
+
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="text-center py-4 mt-5"
+            style="background-color: #212529; color: white;">
+
+        <p class="mb-1">
+            &copy; @DateTime.Now.Year - Pokédex
+        </p>
+
+        <small>
+            Proyecto desarrollado con ASP.NET MVC y PokéAPI
+        </small>
+
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
